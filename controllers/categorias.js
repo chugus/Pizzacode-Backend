@@ -2,6 +2,11 @@ const bcryptjs = require('bcryptjs');
 const Categoria = require('../models/Categoria');
 
 
+const categoriaGet = async (req, res) => {
+    const categoria = await Categoria.findById(req.params.id);
+    res.json(categoria);
+}
+
 const categoriasGet = async (req, res) => {
 
     const [total, categorias] = await Promise.all([
@@ -48,6 +53,7 @@ const categoriasDelete = async (req, res) => {
 
 
 module.exports = {
+    categoriaGet,
     categoriasGet,
     categoriasPost,
     categoriasPut,

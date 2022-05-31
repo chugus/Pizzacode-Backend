@@ -5,12 +5,18 @@ const { existeCategoriaPorID } = require('../helpers/db-validators')
 const validarCampos = require('../middlewares/validar-campos');
 const validarJWT = require('../middlewares/validar-jwt');
 
-const { categoriasGet, categoriasPost, categoriasPut, categoriasDelete } = require('../controllers/categorias');
+const { categoriaGet, categoriasGet, categoriasPost, categoriasPut, categoriasDelete } = require('../controllers/categorias');
 
 
 const router = Router();
 
 router.get('/', categoriasGet);
+
+router.get('/:id', [
+    check('id', 'No es un ID correcto').isMongoId(),
+    check('id').custom(existeCategoriaPorID),
+    validarCampos
+], categoriaGet);
 
 router.post('/', [
     check('nombre', 'El nombre es obligatorio').not().isEmpty(),
