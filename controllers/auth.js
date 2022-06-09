@@ -47,7 +47,7 @@ const login = async (req, res) => {
 
 const loginEmail = async (req, res) => {
     
-    const { email } = req.body;
+    const { correo } = req.body;
 
     try {
         const usuario = await Usuario.findOne({ correo });
