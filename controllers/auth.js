@@ -11,11 +11,12 @@ const login = async (req, res) => {
 
     try {
 
-        // Verificar si el email existe
         const usuario = await Usuario.findOne({ correo });
+        
+        // Verificar si el email existe
         if (!usuario) {
             return res.status(400).json({
-                msg: 'Usuario / Password no son correctos - correo'
+                msg: 'Usuario / Contraseña no son correctos'
             });
         }
 
@@ -23,7 +24,7 @@ const login = async (req, res) => {
         const validPassword = bcryptjs.compareSync(password, usuario.password);
         if (!validPassword) {
             return res.status(400).json({
-                msg: 'Usuario / Password no son correctos - password'
+                msg: 'Usuario / Contraseña no son correctos'
             });
         }
 
@@ -36,12 +37,41 @@ const login = async (req, res) => {
         })
 
     } catch (error) {
-        console.log(error);
         return res.status(500).json({
             msg: 'habla con el admin'
         })
     }
 
+
+}
+
+const loginEmail = async (req, res) => {
+    
+    const { email } = req.body;
+
+    try {
+        const usuario = await Usuario.findOne({ correo });
+        
+        // Verificar si el email existe
+        if (!usuario) {
+            return res.status(400).json({
+                msg: 'El usuario no existe'
+            });
+        }
+
+        // Generar el JWT
+        const token = await generarJWT(usuario._id);
+
+        res.json({
+            usuario,
+            token
+        })        
+        
+    } catch (error) {
+        return res.status(500).json({
+            msg: 'habla con el admin'
+        })
+    }
 
 }
 
@@ -98,6 +128,7 @@ const validarTokenUsuario = async (req, res) => {
 
 module.exports = {
     login,
+    loginEmail,
     googleSignin,
     validarTokenUsuario
 }
