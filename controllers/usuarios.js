@@ -34,9 +34,13 @@ const usuariosPost = async (req, res) => {
     // Guardar en la DB
     await usuario.save();
 
+    // Generar el JWT
+    const token = await generarJWT(usuario._id);
+
     res.json({
-        usuario
-    });
+        usuario,
+        token
+    })
 }
 
 const usuariosPut = async (req, res) => {
