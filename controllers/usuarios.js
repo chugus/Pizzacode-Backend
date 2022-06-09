@@ -1,6 +1,8 @@
 const bcryptjs = require('bcryptjs');
 const Usuario = require('../models/Usuario');
 
+const generarJWT = require('../helpers/generar-jwt');
+
 
 const usuarioGet = async (req, res) => {
     const usuario = await Usuario.findById(req.params.id);
