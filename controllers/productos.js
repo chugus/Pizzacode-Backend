@@ -7,7 +7,7 @@ const Producto = require('../models/Producto');
 const productoGet = async (req, res) => {
     const producto = await Producto.findById(req.params.id);
 
-    res.json({producto});
+    res.json({ producto });
 
 }
 
@@ -25,6 +25,13 @@ const productosGet = async (req, res) => {
 
 }
 
+const productosSearch = async (req, res) => {
+    const { termino } = req.params;
+    const productos = await Producto.find({ $or: [{ nombre: { $regex: termino, $options: 'i' } }, { descripcion: { $regex: termino, $options: 'i' } }] });
+
+    res.json({ productos });
+}
+
 const productosPost = async (req, res) => {
 
     const { nombre, imagen, descripcion, precio, categoria, cuentaAtras } = req.body;
@@ -32,7 +39,7 @@ const productosPost = async (req, res) => {
 
     const agregarProductoACategoria = async () => {
         const categoriaModify = await Categoria.findById(categoria);
-        
+
         categoriaModify.productos.push(producto);
         await categoriaModify.save();
     }
@@ -68,6 +75,7 @@ const productosDelete = async (req, res) => {
 module.exports = {
     productoGet,
     productosGet,
+    productosSearch,
     productosPost,
     productosPut,
     productosDelete

@@ -5,7 +5,7 @@ const { existeProductoPorID, existeCategoriaPorID } = require('../helpers/db-val
 const validarCampos = require('../middlewares/validar-campos');
 const validarJWT = require('../middlewares/validar-jwt');
 
-const {  productoGet, productosGet, productosPost, productosPut, productosDelete } = require('../controllers/productos');
+const {  productoGet, productosGet, productosSearch, productosPost, productosPut, productosDelete } = require('../controllers/productos');
 
 
 const router = Router();
@@ -15,6 +15,8 @@ router.get('/', productosGet);
 router.get('/:id', [
     check('id').custom(existeProductoPorID)
 ], productoGet);
+
+router.get('/search/:termino', productosSearch);
 
 router.post('/', [
     check('nombre', 'El nombre es obligatorio').not().isEmpty(),
