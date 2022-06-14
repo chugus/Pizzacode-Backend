@@ -57,9 +57,19 @@ const tarjetasPut = async (req, res) => {
 }
 
 const tarjetasDelete = async (req, res) => {
-    const tarjeta = await Tarjeta.findByIdAndDelete(req.params.id);
+    const tarjeta = await Tarjeta.findById(req.params.id);
 
-    res.json({ tarjeta });
+    const eliminarTarjetaAUsuario = async () => {
+        const usuarioToModify = await Usuario.findById(tarjeta.usuario);
+
+        usuarioToModify.cards.splice(usuarioToModify.cards.indexOf(tarjeta._id), 1);
+        await usuarioToModify.save();
+    }
+
+    eliminarTarjetaAUsuario();
+    const tarjetaEliminada = await Tarjeta.findByIdAndDelete(req.params.id);
+
+    res.json(tarjeta);
 }
 
 

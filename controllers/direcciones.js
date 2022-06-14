@@ -57,9 +57,19 @@ const direccionesPut = async (req, res) => {
 }
 
 const direccionesDelete = async (req, res) => {
-    const direccion = await Direccion.findByIdAndDelete(req.params.id);
+    const direccion = await Direccion.findById(req.params.id);
 
-    res.json({ direccion });
+    const eliminarDireccionAUsuario = async () => {
+        const usuarioToModify = await Usuario.findById(direccion.usuario);
+
+        usuarioToModify.direcciones.splice(usuarioToModify.direcciones.indexOf(direccion._id), 1);
+        await usuarioToModify.save();
+    }
+
+    eliminarDireccionAUsuario();
+    const direccionEliminada = await Direccion.findByIdAndDelete(req.params.id);
+
+    res.json(direccionEliminada);
 }
 
 
